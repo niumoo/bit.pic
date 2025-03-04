@@ -188,7 +188,7 @@ class ImageBed {
             }
         } catch (error) {
             console.error('加载图片失败:', error);
-            alert('加载图片失败: ' + error.message);
+            alert(error.message);
         }
     }
 }

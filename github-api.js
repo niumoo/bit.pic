@@ -54,7 +54,7 @@ class GitHubAPI {
 
     async uploadImage(file, path) {
         if (!this.token || !this.repo) {
-            throw new Error('GitHub 配置未完成');
+            throw new Error('请先完成 GitHub 配置');
         }
 
         const base64Content = await this.convertToBase64(file);
@@ -145,7 +145,7 @@ class GitHubAPI {
 
     async listImages() {
         if (!this.token || !this.repo) {
-            throw new Error('GitHub 配置未完成');
+            throw new Error('请先完成 GitHub 配置');
         }
 
         try {
