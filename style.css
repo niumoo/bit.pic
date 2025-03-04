@@ -28,6 +28,7 @@ header {
     padding: 8px 16px;
     border: none;
     border-radius: 4px;
+    font-size: 16px;
     background: #f0f0f0;
     cursor: pointer;
     transition: background 0.2s;
