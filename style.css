@@ -189,3 +189,14 @@ header {
 .form-group {
     margin-bottom: 20px;
 }
+.github-link {
+    position: fixed;
+    top: 25 px;
+    right: 20px;
+    z-index: 1000;
+    transition: opacity 0.3s;
+}
+
+.github-link:hover {
+    opacity: 0.7;
+}
