@@ -1,2 +1,2 @@
-## Bit.Pic
-一个基于 GitHub 的在线图床服务
+## bit.pic
+一个基于 GitHub API 的在线图床服务
