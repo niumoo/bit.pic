@@ -150,6 +150,10 @@ class ImageBed {
 
     initPasteUpload() {
         document.addEventListener('paste', async e => {
+            // 如果是在输入框中粘贴，则不处理
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                return;
+            }
             e.preventDefault();
             const items = (e.clipboardData || window.clipboardData).items;
             if (!items) return;
@@ -261,7 +265,7 @@ class ImageBed {
             });
         } catch (error) {
             console.error('加载图片失败:', error);
-            this.showErrorToast(`加载图片失败: ${error.message}`);
+            this.showErrorToast(`${error.message}`);
         }
     }
 }
