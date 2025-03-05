@@ -22,5 +22,8 @@ bit.pic 基于 GitHub API 实现图片的上传、浏览等操作，使用之前
 ![](https://raw.githubusercontent.com/niumoo/wdbyte-img/main/img/2025/1741153513744.webp)
 
 ### 在线配置
+访问：[https://pic.debug.group/](https://pic.debug.group/)
 
+右上角进行配置
 
+![](https://raw.githubusercontent.com/niumoo/wdbyte-img/main/img/2025/1741153801397.webp)
