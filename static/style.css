@@ -39,12 +39,12 @@ header {
 }
 
 .btn.primary {
-    background: #2196F3;
+    background: #4CAF50;
     color: white;
 }
 
 .btn.primary:hover {
-    background: #1976D2;
+    background: #388E3C;;
 }
 
 .upload-area {
@@ -190,17 +190,6 @@ header {
 .form-group {
     margin-bottom: 20px;
 }
-.github-link {
-    position: fixed;
-    top: 25 px;
-    right: 20px;
-    z-index: 1000;
-    transition: opacity 0.3s;
-}
-
-.github-link:hover {
-    opacity: 0.7;
-}
 
 /* Toast 提示框样式 */
 .toast {
@@ -217,7 +206,7 @@ header {
 }
 
 .toast-info {
-    background-color: #95d897;
+    background-color: #61c864;
 }
 
 .toast-success {

@@ -52,9 +52,69 @@ class GitHubAPI {
         return `https://raw.githubusercontent.com/${this.repo}/main/${filename}`;
     }
 
+    // 新增: 检查仓库是否存在
+    async checkRepoExists() {
+        if (!this.token || !this.repo) {
+            throw new Error('请先完成 GitHub 配置');
+        }
+
+        try {
+            const response = await fetch(`https://api.github.com/repos/${this.repo}`, {
+                headers: {
+                    'Authorization': `token ${this.token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+            return response.status === 200;
+        } catch (error) {
+            console.error('检查仓库失败:', error);
+            return false;
+        }
+    }
+
+    // 新增: 创建仓库
+    async createRepo() {
+        if (!this.token || !this.repo) {
+            throw new Error('请先完成 GitHub 配置');
+        }
+
+        const [owner, repoName] = this.repo.split('/');
+        
+        try {
+            const response = await fetch('https://api.github.com/user/repos', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `token ${this.token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: repoName,
+                    private: false,
+                    auto_init: true, // 自动初始化仓库
+                    description: 'Created by bit.pic Image Uploader'
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('创建仓库失败');
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('创建仓库失败:', error);
+            throw error;
+        }
+    }
+
     async uploadImage(file, path) {
         if (!this.token || !this.repo) {
             throw new Error('请先完成 GitHub 配置');
+        }
+
+        // 检查仓库是否存在，不存在则创建
+        const repoExists = await this.checkRepoExists();
+        if (!repoExists) {
+            await this.createRepo();
         }
 
         const base64Content = await this.convertToBase64(file);

@@ -20,7 +20,7 @@ class ImageBed {
         }
 
         try {
-            this.showUploadingToast(`正在上传${source === 'paste' ? '粘贴的' : ''}图片...`);
+            this.showProcessToast(`正在上传${source === 'paste' ? '粘贴的' : ''}图片...`);
 
             const timestamp = Date.now();
             const prefix = source === 'paste' ? 'paste-' : '';
@@ -64,7 +64,7 @@ class ImageBed {
         }, 2000);
     }
 
-    showUploadingToast(message = '正在上传...') {
+    showProcessToast(message = '正在上传...') {
         this.showToast(message, 'info');
     }
 
@@ -187,6 +187,12 @@ class ImageBed {
         });
 
         this.configModal.style.display = 'none';
+        // 检查仓库是否存在，不存在则创建
+        const repoExists = await this.github.checkRepoExists();
+        if (!repoExists) {
+            this.showProcessToast(`正在创建目标仓库...`);
+            await this.github.createRepo();
+        }
         await this.loadImages();
     }
 
@@ -236,6 +242,7 @@ class ImageBed {
     // 图片加载和展示
     async loadImages() {
         try {
+            this.showProcessToast(`正在加载最近图片信息....`);
             const files = await this.github.listImages();
             this.gallery.innerHTML = '';
             
