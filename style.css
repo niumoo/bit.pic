@@ -147,7 +147,7 @@ header {
 }
 
 .copy-url-btn:hover {
-    background: #1976D2;
+    background: #6a6868;
 }
 
 .copy-url-btn.md {
@@ -159,7 +159,7 @@ header {
 }
 
 .copy-success {
-    background: #9C27B0 !important;
+    background: #4CAF50 !important;
 }
 
 .url-preview {
