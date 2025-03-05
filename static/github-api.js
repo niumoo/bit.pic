@@ -38,7 +38,7 @@ class GitHubAPI {
         this.token = localStorage.getItem('github_token');
         this.repo = localStorage.getItem('github_repo');
         this.commitCache = new LRUCache(50); // 缓存最多50个提交详情
-        this.customUrl = localStorage.getItem('github_custom_url');
+        this.customUrl = localStorage.getItem('github_customUrl');
         // 从 localStorage 加载缓存
         this.loadCache();
     }
