@@ -1,5 +1,7 @@
 # bit.pic
-一个基于 GitHub API 的在线图床服务
+一个基于 GitHub API 的在线图床服务。
+
+图片上传时候自动转换成 webp 格式压缩大小，支持配置 URL 前缀便于使用如 jsdelivr、cloudflare 等服务。
 
 
 ## 使用
