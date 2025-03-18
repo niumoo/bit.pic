@@ -242,3 +242,29 @@ header {
         transform: translate(-50%, -20px);
     }
 }
+
+.upload-options {
+    border: 2px dashed #ccc;
+    margin-top: 20px;
+    padding: 10px;
+    text-align: center;
+}
+
+.preview-area {
+    margin: 10px 0;
+    text-align: center;
+}
+
+#previewImage {
+    max-width: 800px;
+    max-height: 400px;
+}
+
+.quality-control {
+    margin: 10px 0;
+}
+
+.image-info {
+    color: #666;
+    font-size: 14px;
+}

@@ -5,9 +5,78 @@ class ImageBed {
         this.bindEvents();
         this.loadImages();
         this.initPasteUpload();
+        this.currentFile = null;
+        this.initUploadOptions();
     }
 
-    // 统一的图片上传处理方法
+    initUploadOptions() {
+        this.qualitySelect = document.getElementById('imageQuality');
+        this.limitSizeCheck = document.getElementById('limitSize');
+        this.startUploadBtn = document.getElementById('startUpload');
+        this.previewArea = document.getElementById('previewArea');
+        this.previewImage = document.getElementById('previewImage');
+        this.imageSizeSpan = document.getElementById('imageSize');
+
+        // 添加质量选择和尺寸限制的变化监听
+        this.qualitySelect.addEventListener('change', () => this.updatePreview());
+        this.limitSizeCheck.addEventListener('change', () => this.updatePreview());
+        this.startUploadBtn.addEventListener('click', () => this.handlePendingUploads());
+    }
+
+    async updatePreview() {
+        if (!this.currentFile) return;
+        
+        try {
+            // 转换为WebP并更新预览
+            const webpFile = await this.convertToWebP(this.currentFile);
+            const previewUrl = URL.createObjectURL(webpFile);
+            this.previewImage.src = previewUrl;
+            
+            // 更新文件大小显示
+            const sizeKB = (webpFile.size / 1024).toFixed(2);
+            this.imageSizeSpan.textContent = `${sizeKB} KB`;
+
+            // 存储转换后的文件
+            this.pendingFiles = [webpFile];
+        } catch (error) {
+            console.error('预览更新失败:', error);
+            this.showErrorToast('预览更新失败');
+        }
+    }
+
+    async convertToWebP(file) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                // 如果启用了尺寸限制且宽度超过1200px
+                if (this.limitSizeCheck.checked && width > 1200) {
+                    const ratio = 1200 / width;
+                    width = 1200;
+                    height = Math.round(height * ratio);
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                const quality = parseFloat(this.qualitySelect.value);
+                canvas.toBlob((blob) => {
+                    const webpFile = new File([blob], file.name.replace(/\.[^/.]+$/, '.webp'), { 
+                        type: 'image/webp' 
+                    });
+                    resolve(webpFile);
+                }, 'image/webp', quality);
+            };
+            img.src = URL.createObjectURL(file);
+        });
+    }
+
     async handleImageUpload(file, source = 'upload') {
         if (!this.github.token || !this.github.repo) {
             this.showErrorToast('请先配置 GitHub Token 和仓库信息');
@@ -19,32 +88,42 @@ class ImageBed {
             return false;
         }
 
-        try {
-            this.showProcessToast(`正在上传${source === 'paste' ? '粘贴的' : ''}图片...`);
+        // 保存当前文件并显示预览区域
+        this.currentFile = file;
+        this.previewArea.style.display = 'block';
+        
+        // 立即更新预览
+        await this.updatePreview();
+    }
 
+    async handlePendingUploads() {
+        if (!this.currentFile || this.pendingFiles.length === 0) {
+            this.showErrorToast('没有待上传的图片');
+            return;
+        }
+
+        try {
+            this.showProcessToast(`正在上传图片...`);
             const timestamp = Date.now();
-            const prefix = source === 'paste' ? 'paste-' : '';
-            const newFileName = `${prefix}${timestamp}${this.getImageExtension(file.type)}`;
-            
-            // 创建新的文件对象
-            const newFile = new File([file], newFileName, { type: file.type });
-            
-            // 转换为WebP
-            const webpFile = await this.convertToWebP(newFile);
             const year = new Date().getFullYear();
             const path = `img/${year}/${timestamp}.webp`;
             
-            await this.github.uploadImage(webpFile, path);
+            await this.github.uploadImage(this.pendingFiles[0], path);
             await this.loadImages();
             
+            // 清理当前状态
+            this.currentFile = null;
+            this.pendingFiles = [];
+            this.previewArea.style.display = 'none';
+            
             this.showSuccessToast('图片上传成功！');
-            return true;
         } catch (error) {
             console.error('上传失败:', error);
             this.showErrorToast(`上传失败: ${error.message}`);
-            return false;
         }
     }
+
+
 
     // Toast 提示相关方法
     showToast(message, type = 'info') {
@@ -218,25 +297,6 @@ class ImageBed {
             'image/bmp': '.bmp'
         };
         return extensions[mimeType] || '.png';
-    }
-
-    async convertToWebP(file) {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                canvas.width = img.width;
-                canvas.height = img.height;
-                
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
-                
-                canvas.toBlob((blob) => {
-                    resolve(new File([blob], file.name, { type: 'image/webp' }));
-                }, 'image/webp', 0.9);
-            };
-            img.src = URL.createObjectURL(file);
-        });
     }
 
     // 图片加载和展示

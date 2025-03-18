@@ -29,9 +29,33 @@
                     点击或拖拽图片到此处上传
                     <br>支持直接粘贴图片 (Ctrl+V)
                 </div>
-            </div>            
+            </div>         
+            <div class="upload-options">
+                <div class="preview-area" id="previewArea" style="display: none;">
+                    <img id="previewImage" alt="预览图片">
+                    <div class="image-info">大小: <span id="imageSize">0 KB</span></div>
+                </div>
+                <div class="quality-control">
+                    <label>图片质量:</label>
+                    <select id="imageQuality">
+                        <option value="0.85">85%（推荐）</option>
+                        <option value="0.8">80%</option>
+                        <option value="0.7">70%</option>
+                        <option value="0.6">60%</option>
+                        <option value="0.5">50%</option>
+                        <option value="0.4">40%</option>
+                        <option value="0.3">30%</option>
+                    </select>
+                    <label>
+                        <input type="checkbox" id="limitSize"> 限制最大宽度为1200px
+                    </label>
+                    <button id="startUpload" class="btn primary">开始上传</button>
+                </div>
+            </div>  
 
+          
             <div class="gallery" id="imageGallery">
+                <p>已上传的图片将显示在这里</p>
                 <!-- 图片将在这里显示 -->
             </div>
         </main>
