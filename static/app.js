@@ -104,7 +104,7 @@ class ImageBed {
 
         try {
             this.showProcessToast(`正在上传图片...`);
-            const timestamp = Date.now();
+            const timestamp = Date.now().toString(36);
             const year = new Date().getFullYear();
             const path = `img/${year}/${timestamp}.webp`;
             
